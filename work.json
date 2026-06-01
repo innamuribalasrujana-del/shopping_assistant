@@ -1,0 +1,242 @@
+{
+  "name": "My workflow 6",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1952,
+        -176
+      ],
+      "id": "182410b3-ecba-4c9a-b087-d4d24a2c3797",
+      "name": "Telegram Trigger",
+      "webhookId": "2472161a-1f67-4563-996e-13aeaaef99a4",
+      "credentials": {
+        "telegramApi": {
+          "id": "5djAELXWJIERlD9R",
+          "name": "ai_assistant"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}{{ $json.message.message_id }}",
+        "options": {
+          "systemMessage": "You are Maya, a shopping and styling assistant on Telegram."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -1488,
+        -144
+      ],
+      "id": "f0c20cfa-d573-4dfd-9c3d-0f3a6a3a4ffc",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -1520,
+        16
+      ],
+      "id": "227c89f6-bb81-48d4-ad1d-a8fd2712afc7",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "zmozHKXs693u6TAc",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.scraperapi.com",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "api_key",
+              "value": "={{ $env.SCRAPER_API_KEY }}"
+            },
+            {
+              "name": "url",
+              "value": "={{ $fromAI('parameters1_Value', ``, 'string') }}"
+            }
+          ]
+        },
+        "options": {},
+        "optimizeResponse": true,
+        "responseType": "html",
+        "cssSelector": "div.s-search-results",
+        "onlyContent": "={{ $fromAI('Return_Only_Content', ``, 'boolean') }}"
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        -1376,
+        96
+      ],
+      "id": "787d4c8b-1a79-4a5a-b84f-95210a5b43b0",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a2f1404f-f5db-43b5-a859-fd229e3ff9df",
+              "leftValue": "={{ $json.message.voice }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1728,
+        -160
+      ],
+      "id": "9b557463-6613-4a9e-8b6b-3e4784a53738",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -1552,
+        -448
+      ],
+      "id": "7c63cae6-7887-4c4e-aaeb-9fdfa3f39f69",
+      "name": "Get a file",
+      "webhookId": "eeab4ca0-baf4-4291-a3d6-f0471ad545a6",
+      "credentials": {
+        "telegramApi": {
+          "id": "5djAELXWJIERlD9R",
+          "name": "ai_assistant"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node['Telegram Trigger'].json['message']['chat']['id'] }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -1072,
+        -128
+      ],
+      "id": "28da6d47-c701-46ca-b0ad-fbb3719e19d6",
+      "name": "Send a text message",
+      "webhookId": "b758c379-28a5-4618-9876-bc06125b6e69",
+      "credentials": {
+        "telegramApi": {
+          "id": "5djAELXWJIERlD9R",
+          "name": "ai_assistant"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/audio/translations",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$env.GROQ_API_KEY}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "whisper-large-v3"
+            },
+            {
+              "name": "prompt",
+              "value": "Specify context or spelling"
+            },
+            {
+              "name": "language",
+              "value": "en"
+            },
+            {
+              "name": "temperature",
+              "value": "0"
+            },
+            {
+              "name": "response_format",
+              "value": "json"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -992,
+        -448
+      ],
+      "id": "1d0b57e3-3d1d-44c5-b16f-1fe06db59afd",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "language": "pythonNative",
+        "pythonCode": "for item in _items:\n    if 'binary' in item and 'data' in item['binary']:\n        filename = item['binary']['data'].get('fileName')\n\n        if filename:\n            item['binary']['data']['fileName'] = filename.replace('.oga', '.ogg')\n\nreturn _items"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1248,
+        -448
+      ],
+      "id": "39d5b8a4-9a66-42d2-b0a0-255350d6e652",
+      "name": "Code in Python"
+    }
+  ]
+}
