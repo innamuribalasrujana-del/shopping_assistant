@@ -3,7 +3,8 @@ Maya AI is a Telegram-based shopping and styling assistant built using n8n, Goog
 # 🛍️ Maya AI – Shopping & Styling Assistant
 
 Maya AI is a Telegram-based shopping and styling assistant built using n8n, Google Gemini, and Groq Whisper API. It supports voice and text interactions, provides fashion recommendations, and searches Amazon India products using AI-powered automation and web scraping.
-https://github.com/innamuribalasrujana-del/shopping_assistant/blob/main/WhatsApp%20Image%202026-06-02%20at%208.39.31%20AM.jpeg
+<img width="1600" height="641" alt="image" src="https://github.com/user-attachments/assets/81566ed6-da29-4279-a784-fc023ce5d0bd" />
+
 ---
 
 ## ✨ Features
