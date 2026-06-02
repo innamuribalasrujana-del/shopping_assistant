@@ -41,8 +41,8 @@ Maya AI is a Telegram-based shopping and styling assistant built using n8n, Goog
 ---
 
 **OUTPUTS:**
-<img width="735" height="595" alt="image" src="https://github.com/user-attachments/assets/8cf0aa6d-947c-44ea-ba37-e387ce32c0b7" />
-<img width="734" height="592" alt="image" src="https://github.com/user-attachments/assets/19798430-350c-4ac5-9e06-60f5b1513da3" />
+<img width="734" height="395" alt="image" src="https://github.com/user-attachments/assets/8cf0aa6d-947c-44ea-ba37-e387ce32c0b7" />
+<img width="734" height="395" alt="image" src="https://github.com/user-attachments/assets/19798430-350c-4ac5-9e06-60f5b1513da3" />
 
 
 ## 🚀 Use Cases
